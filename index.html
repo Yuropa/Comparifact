@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>Wikipedia Images</title>
+    <meta name="description" content="A web app to generate visualizations from news article text.">
+    <meta name="author" content="Josh Ford">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    
+    <script src="external/jquery.js"></script>
+    <script src="external/jquery-migrate.js"></script>
+    <script src="external/semantic.min.js"></script>
+    <script src="external/Readability.js"></script>
+    
+    <script src="networking.js"></script>
+    <script src="images.js"></script>
+    
+    <link rel="stylesheet" type="text/css" href="ReferenceMaps/mapbox.css">
+    <link rel="stylesheet" type="text/css" href="ReferenceMaps/style.css">
+    <script src="ReferenceMaps/api.tiles.mapbox.min.js"></script>
+    <script src="ReferenceMaps/d3.min.js"></script>
+    <script src="ReferenceMaps/topojson.js"></script>
+    <script src="ReferenceMaps/refMap.js"></script>
+    
+    <link href='https://fonts.googleapis.com/css?family=Raleway:400,300,600' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="external/semantic.min.css">
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+
+<body style="background: white; height: 100%;">
+    <div class="ui" id="content" style="padding: 5%; padding-left:10%; padding-right:10%; margin: 0;">
+        <h3 class="ui header" style="padding-bottom: 1rem;">
+            Wikipedia Images
+            
+            <p style="float:right; font-size:1rem;">
+                <select class="ui dropdown">
+                    <option value="wikify" selected>Wikify</option>
+                    <option value="wikify-esa">Wikify with ESA</option>
+                    <option value="esa">ESA</option>
+                    <option value="all">All</option>
+                </select>
+                <script>
+                    $('.ui.dropdown').dropdown();
+                </script>
+            </p>
+        </h3>
+        <div class="ui labeled fluid action input">
+            <div class="ui label">
+                http://
+            </div>
+            <input type="text" id="url-field" placeholder="nytimes.com">
+            <button class="ui teal right labeled icon button" id="submitButton" onclick="loadText();">
+                <i class="file text outline icon"></i>
+                Load
+            </button>
+        </div>
+        <div class="ui segment" id="text-content" contenteditable=true>
+        </div>
+        <div>
+            <button class="ui teal right labeled icon button" id="generateButton" onclick="generateImages();">
+                <i class="refresh icon"></i>
+                Load
+            </button>
+        </div>
+    </div>
+</body>
+</html>
