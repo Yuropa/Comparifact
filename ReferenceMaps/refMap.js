@@ -219,5 +219,5 @@ function generateMap(name, annotations, mapStyle, extent) {
         addMarker(annotation.lat, annotation.lng, annotation.title);
     }
     
-    map.exp_extent = extent;
+    map.fitBounds(extent);
 }

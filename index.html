@@ -2,7 +2,7 @@
 
 <html>
 <head>
-    <title>Wikipedia Images</title>
+    <title>WikiViz</title>
     <meta name="description" content="A web app to generate visualizations from news article text.">
     <meta name="author" content="Josh Ford">
     <meta charset="utf-8" />
@@ -13,13 +13,16 @@
     <script src="external/jquery-migrate.js"></script>
     <script src="external/semantic.min.js"></script>
     <script src="external/Readability.js"></script>
+    <script src="external/jquery.unveil.js"></script>
     
     <script src="networking.js"></script>
     <script src="images.js"></script>
+    <script src="article-loader.js"></script>
     
     <link rel="stylesheet" type="text/css" href="ReferenceMaps/mapbox.css">
     <link rel="stylesheet" type="text/css" href="ReferenceMaps/style.css">
     <script src="ReferenceMaps/api.tiles.mapbox.min.js"></script>
+    <script src="external/modernizr.min.js"></script>
     <script src="ReferenceMaps/d3.min.js"></script>
     <script src="ReferenceMaps/topojson.js"></script>
     <script src="ReferenceMaps/refMap.js"></script>
@@ -30,39 +33,76 @@
 </head>
 
 <body style="background: white; height: 100%;">
-    <div class="ui" id="content" style="padding: 5%; padding-left:10%; padding-right:10%; margin: 0;">
-        <h3 class="ui header" style="padding-bottom: 1rem;">
-            Wikipedia Images
-            
-            <p style="float:right; font-size:1rem;">
-                <select class="ui dropdown">
-                    <option value="wikify" selected>Wikify</option>
-                    <option value="wikify-esa">Wikify with ESA</option>
-                    <option value="esa">ESA</option>
-                    <option value="all">All</option>
-                </select>
-                <script>
-                    $('.ui.dropdown').dropdown();
-                </script>
-            </p>
-        </h3>
-        <div class="ui labeled fluid action input">
-            <div class="ui label">
-                http://
+    <div class="ui" id="landing-page">
+        <div class="header">
+            <div class="betaLogo"></div>
+            <span class="title">WikiViz</span>
+            <h3>Find supporting visualizations for news articles.</h3>
+            <input type="text" placeholder="http://www.nytimes.com" class="search" id="search">
+            <div class="searchButton" onclick="search();"></div>
+            <div class="link" onclick="search('');">Try your own!</div>
+        </div>
+    </div>
+    <div class="ui" id="article-page" style="display: none;">
+        <div class="ui stackable equal width grid" style="padding: 0; margin: 0; width: 100%; height: 100%;">
+            <div class="column" style="padding:0 !important;">
+                <!-- Document UI -->
+                <div class="document-header">
+                </div>
+                <div style="padding:1em;">
+                    <div class="ui" id="article-text" data-placeholder="Article text..." contenteditable="true"></div>
+                </div>
             </div>
-            <input type="text" id="url-field" placeholder="nytimes.com">
-            <button class="ui teal right labeled icon button" id="submitButton" onclick="loadText();">
-                <i class="file text outline icon"></i>
-                Load
-            </button>
-        </div>
-        <div class="ui segment" id="text-content" contenteditable=true>
-        </div>
-        <div>
-            <button class="ui teal right labeled icon button" id="generateButton" onclick="generateImages();">
-                <i class="refresh icon"></i>
-                Load
-            </button>
+            <div class="column" id="image-column">
+                <!-- Select Images UI -->
+                <div id="select-header">
+                    <h3 style="left: 1rem; position: relative; top: 1rem;">Releated Visualizations</h3>
+                    <button id="image-load-button" class="ui icon button" style="position: absolute; right: 6px; top: 6px;" onclick="loadImages()">
+                        <i class="refresh icon"></i>
+                    </button>
+                </div>
+                <div id="select-header-padding"></div>
+                
+                <div id="select-ui" style="display: none;">
+                    <div class="ui" id="image-select">
+                    </div>
+                </div>
+                
+                <div id="image-loading-overlay" style="display: none;">
+                    <div class="container">
+                        <img class="loading" src="Loading.svg" style="display: none;">
+                        <img src="Chart.svg" style="display: none;">
+                        <br>
+                        <p style="display: none;">Loading visualizations for the news article. Depending on the article, this can take several mintues.</p>
+                        <p style="display: none;">Enter the text from a news article into the left and click the refresh button to load the visualizations.</p>
+                    </div>
+                </div>
+                
+                <script>
+                    function showArticleNoText() {
+                        $('#select-ui').css('display', 'none');
+                        $('#image-loading-overlay').css('display', 'initial');
+                        $('#image-loading-overlay').find('img').eq(0).css('display', 'none');
+                        $('#image-loading-overlay').find('img').eq(1).css('display', 'initial');
+                        $('#image-loading-overlay').find('p').eq(0).css('display', 'none');
+                        $('#image-loading-overlay').find('p').eq(1).css('display', 'initial');
+                    }
+                    
+                    function showArticleLoading() {
+                        $('#select-ui').css('display', 'none');
+                        $('#image-loading-overlay').css('display', 'initial');
+                        $('#image-loading-overlay').find('img').eq(1).css('display', 'none');
+                        $('#image-loading-overlay').find('img').eq(0).css('display', 'initial');
+                        $('#image-loading-overlay').find('p').eq(1).css('display', 'none');
+                        $('#image-loading-overlay').find('p').eq(0).css('display', 'initial');
+                    }
+                    
+                    function showArticleLoaded() {
+                        $('#select-ui').css('display', 'initial');
+                        $('#image-loading-overlay').css('display', 'none');
+                    }
+                </script>
+            </div>
         </div>
     </div>
 </body>
