@@ -544,6 +544,10 @@ input[type="text"].search:focus {
     cursor: pointer;
 }
 
+.display-image svg {
+    width:100%;
+}
+
 .ui.card.image-card {
     width: 50%;
     left: 25%;

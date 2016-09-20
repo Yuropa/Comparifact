@@ -27,12 +27,15 @@ function downloadImage(text, success, error, method) {
         method = 'all';
     }
     
-    var url = "/images?lang=" + lang + "&method=" + method + "&text=" + encodeURI(text);
-    
     asyncReqst({
-        url: baseURL + url,
+        url: baseURL + "/images",
         async: true,
         type: 'POST',
+        data: JSON.stringify({
+            'lang'   : lang,
+            'method' : method,
+            'text'   : encodeURI(text)
+        }),
         dataType: 'text',
         contentType: 'text/plain',
         success: function(result) {
